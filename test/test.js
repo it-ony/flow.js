@@ -132,6 +132,46 @@ describe('Flow', function () {
         });
 
 
+        it('synchron sequence throwing error should add error in exec', function (done) {
+            flow()
+                .seq(function () {
+                    throw "error"
+                })
+                .exec(function (err, results) {
+                    should.exist(err);
+                    done();
+                })
+        });
+
+        it('asynchron sequence throwing error should add error in exec', function (done) {
+            flow()
+                .seq(function (cb) {
+                    cb("error");
+                })
+                .exec(function (err, results) {
+                    should.exist(err);
+                    done();
+                })
+        });
+
+        it('error in sequence should interrupt flow', function (done) {
+
+            var x;
+
+            flow()
+                .seq(function (cb) {
+                    cb("error");
+                })
+                .seq(function(){
+                    x = 123;
+                })
+                .exec(function (err, results) {
+                    should.exist(err) && should.not.exists(x);
+                    done();
+                })
+        });
+
+
     });
 
 
