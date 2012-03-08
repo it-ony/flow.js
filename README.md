@@ -12,3 +12,48 @@ flow.js is currently in an early state.
 
 * sequence flow
 * parallel flow
+
+## Usage
+
+### Create a flow and execute
+
+```javascript
+
+    flow()
+       .exec(function (err, results) {
+            if (err) {
+                // some error inside the flow
+            } else {
+                // access to results
+            }
+       });
+```
+### Add a sequence
+
+#### execute synchron method in sequence
+
+```javascript
+    flow()
+       .seq(function(){
+           // do something synchron
+       })
+       .exec(function (err, results) {           
+       });
+
+```
+
+#### execute synchron method in sequence
+
+```javascript
+    flow()
+       .seq(function(cb){
+           // do something asynchron
+           setTimeout(function(){
+                // invoke callback
+                cb(null, "result of this sequence");
+           }, 1000);
+       })
+       .exec(function (err, results) {           
+       });
+
+```

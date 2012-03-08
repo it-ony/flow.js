@@ -16,6 +16,7 @@ describe('Flow', function () {
         it('should always call callback', function (done) {
             flow()
                 .seq(function (cb) {
+
                     cb(null);
                 })
                 .exec(function (err, vars) {
