@@ -172,7 +172,179 @@ describe('Flow', function () {
         });
 
 
+        it('passing no function to sequence should fails', function (done) {
+
+            try {
+                flow()
+                    .seq()
+                    .exec(function (err, results) {
+                        throw "Exec should be executed";
+                    });
+            } catch (e) {
+                done()
+            }
+        });
+
+        it('passing no function to sequence should fails even with var name', function (done) {
+
+            try {
+                flow()
+                    .seq("x")
+                    .exec(function (err, results) {
+                        throw "Exec should be executed";
+                    });
+            } catch (e) {
+                done()
+            }
+        });
+
+
     });
 
+
+    describe('#par()', function () {
+        it('sychron parallel', function (done) {
+
+            var x, y, z;
+
+            flow()
+                .par([
+                    function() {
+                        x = 1;
+                    },
+                    function() {
+                        y = 2;
+                    },
+                    function() {
+                        z = 3;
+                    }
+                ])
+                .exec(function (err) {
+                    should.not.exist(err);
+
+                    should.exist(x) && should.exist(y) && should.exist(z);
+                    x.should.eql(1) && y.should.eql(2) && z.should.eql(3);
+
+                    done();
+                })
+        });
+
+        it('asychron parallel', function (done) {
+
+            var x, y, z;
+
+            flow()
+                .par([
+                function (cb) {
+                    setTimeout(function(){
+                        x = 1;
+                        cb(null);
+                    }, 20);
+                },
+                function (cb) {
+                    setTimeout(function () {
+                        y = 2;
+                        cb(null);
+                    }, 20);
+                },
+                function (cb) {
+                    setTimeout(function () {
+                        z = 3;
+                        cb(null);
+                    }, 20);
+                }
+            ])
+                .exec(function (err) {
+                    should.not.exist(err);
+
+                    should.exist(x) && should.exist(y) && should.exist(z);
+                    x.should.eql(1) && y.should.eql(2) && z.should.eql(3);
+
+                    done();
+                })
+        });
+
+        it('sychron parallel', function (done) {
+
+            flow()
+                .par({
+                    a: function () {
+                        return 1;
+                    },
+                    b: function () {
+                        return 2;
+                    },
+                    c: function () {
+                        return 3;
+                    }
+                })
+                .exec(function (err, results) {
+                    should.not.exist(err);
+
+                    should.exist(results) && results.should.have.property('a')
+                        && results.should.have.property('b') && results.should.have.property('c');
+
+
+                    done();
+                })
+        });
+
+
+        it('asychron parallel set vars', function (done) {
+
+            flow()
+                .par({
+                    a: function (cb) {
+                        setTimeout(function () {
+                            cb(null, 1);
+                        }, 20);
+                    },
+                    b: function (cb) {
+                        setTimeout(function () {
+                            cb(null, 2);
+                        }, 20);
+                    },
+                    c: function (cb) {
+                        setTimeout(function () {
+                            cb(null, 3);
+                        }, 20);
+                    }
+                })
+                .exec(function (err, results) {
+                    should.not.exist(err);
+
+                    should.exist(results) && results.should.have.property('a')
+                    && results.should.have.property('b') && results.should.have.property('c');
+
+                    results.a.should.eql(1) && results.b.should.equal(2) && results.c.should.eql(3);
+
+                    done();
+                })
+        });
+
+        it('exception in synchron parallel tasks should not set a var and call exec', function (done) {
+
+            flow()
+                .par({
+                    a: function () {
+                        return 1;
+                    },
+                    b: function () {
+                        throw "error";
+                    },
+                    c: function () {
+                        return 2;
+                    }
+                })
+                .exec(function (err, results) {
+                    should.exist(err);
+
+                    results.should.not.have.property('a') && results.should.not.have.property('b')
+                        && results.should.not.have.property('c');
+
+                    done();
+                })
+        });
+    });
 
 });
