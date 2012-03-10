@@ -13,6 +13,13 @@ flow.js is currently in an early state.
 * sequence flow (seq)
 * parallel flow (par)
 
+## Possible features (if somebody like or need)
+
+* seq each  - execute sequence for each function given as array
+* end       - breaks the flow from inside a function with `this.end(err, data)`
+* catch     - adds a catch action, which will handle erros instead of exec action
+* autoexec  - automatically execute flow
+
 ## Usage
 
 ### Create a flow and execute
