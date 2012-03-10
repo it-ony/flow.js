@@ -10,8 +10,8 @@ flow.js is currently in an early state.
 
 ## Features
 
-* sequence flow
-* parallel flow
+* sequence flow (seq)
+* parallel flow (par)
 
 ## Usage
 
@@ -53,7 +53,66 @@ flow.js is currently in an early state.
                 cb(null, "result of this sequence");
            }, 1000);
        })
-       .exec(function (err, results) {           
+       .exec(function (err, results) {
+       });
+
+```
+
+
+#### sequence with variable registration
+
+```javascript
+    flow()
+       .seq("myVar", function(){
+           return "valueOfMyVar";
+       })
+       .exec(function (err, results) {
+           console.log(results.myVar);
+       });
+
+```
+
+### Add parallel control flow
+
+#### asynchron and synchron control parallel control flows
+
+```javascript
+    flow()
+       .par([
+            function() {
+                // synchron method
+            },
+            function (cb) {
+                // asynchron method
+            }
+            // and even more
+       ])
+       .exec(function (err, results) {
+       });
+
+```
+
+#### asynchron and synchron control parallel with variable registration
+
+```javascript
+    flow()
+       .par({
+            a: function() {
+                // synchron method
+                return 123;
+            },
+            b: function (cb) {
+                // asynchron method
+                setTimeout(function(){
+                    cb(null, "I completed after 100ms");
+                }, 100);
+            }
+            // and even more
+       })
+       .exec(function (err, results) {
+            console.log(results);
+            // results.a = 123;
+            // results.b = "I completed after 100ms");
        });
 
 ```
