@@ -72,7 +72,7 @@ describe('Flow', function () {
             flow()
                 .seq("x", function (cb) {
                     // asychron
-                    cb(null, "y")
+                    cb(null, "y");
                 })
                 .exec(function (err, results) {
                     should.not.exist(err);
@@ -203,6 +203,28 @@ describe('Flow', function () {
 
 
     describe('#par()', function () {
+
+
+        it('empty parallel', function (done) {
+            flow()
+                .par([])
+                .exec(function (err) {
+                    should.not.exist(err);
+
+                    done();
+                })
+        });
+
+        it('empty parallel with vars', function (done) {
+            flow()
+                .par({})
+                .exec(function (err) {
+                    should.not.exist(err);
+
+                    done();
+                })
+        });
+
         it('sychron parallel', function (done) {
 
             var x, y, z;
@@ -254,14 +276,14 @@ describe('Flow', function () {
                     }, 20);
                 }
             ])
-                .exec(function (err) {
-                    should.not.exist(err);
+            .exec(function (err) {
+                should.not.exist(err);
 
-                    should.exist(x) && should.exist(y) && should.exist(z);
-                    x.should.eql(1) && y.should.eql(2) && z.should.eql(3);
+                should.exist(x) && should.exist(y) && should.exist(z);
+                x.should.eql(1) && y.should.eql(2) && z.should.eql(3);
 
-                    done();
-                })
+                done();
+            })
         });
 
         it('sychron parallel', function (done) {
