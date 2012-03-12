@@ -5,8 +5,7 @@
     "author": "it-ony <flow.js@it-ony.de>",
     "description": "a asynchronous-asynchronous flow control library which runs on node and in browsers",
     "scripts": {
-        "start": "node ./bin/http-server",
-        "test": "vows --spec --isolate"
+        "test": "mocha -R spec"
     },
     "main": "./lib/flow",
     "repository": {
