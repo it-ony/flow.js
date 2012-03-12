@@ -12,7 +12,7 @@ describe('Flow', function () {
                 })
         });
 
-        it('should always call callback', function (done) {
+        it('should always call callback if exec', function (done) {
             flow()
                 .seq(function (cb) {
                     cb(null);
@@ -20,6 +20,22 @@ describe('Flow', function () {
                 .exec(function (err, vars) {
                     done();
                 });
+
+        });
+
+        it('should not execute flow if exec isn\'t called', function (done) {
+
+            var a;
+
+            flow()
+                .seq(function (cb) {
+                    a = 1;
+                });
+
+            setTimeout(function() {
+                should.not.exist(a);
+                done();
+            }, 10);
 
         });
 
