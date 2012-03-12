@@ -12,11 +12,11 @@ flow.js is currently in an early state.
 
 * sequence flow (seq)
 * parallel flow (par)
+* end       - breaks the flow from inside an action
 
 ## Possible features (if somebody like or need)
 
 * seq each  - execute sequence for each function given as array
-* end       - breaks the flow from inside a function with `this.end(err, data)`
 * catch     - adds a catch action, which will handle erros instead of exec action
 * autoexec  - automatically execute flow
 
@@ -122,4 +122,44 @@ flow.js is currently in an early state.
             // results.b = "I completed after 100ms");
        });
 
+```
+
+
+### end flow from inside an synchron action
+
+```javascript
+    flow()
+        .seq("a", function() {
+            // do something
+        }
+        .par({
+            b: function() {
+                // do something synchron in parallel ...
+
+                // end flow on condition
+                if (condition) {
+                    this.end(); // end flow after return statement
+                    return -2;
+                }
+
+                return 2;
+            },
+            c: function(cb) {
+                // ... with something asynchron
+
+                // end flow the asynchron way
+                this.end(null, 3); // or cb.end(null, 3) or cb(null, 3, true) or this(null, 3, true)
+            }
+        })
+        .seq("e", function() {
+            // this would executed, because either b or c will end the flow
+        }
+        .exec(function(err, results) {
+            /* this function is called on
+               * error thrown in synchron method
+               * error object passed in asynchron method
+               * this.end() is called
+               * flow is executed completely
+            */
+        });
 ```
