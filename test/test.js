@@ -241,7 +241,8 @@ describe('Flow', function () {
                         z = 3;
                     }
                 ])
-                .exec(function (err) {
+                .exec(function (err, results) {
+
                     should.not.exist(err);
 
                     should.exist(x) && should.exist(y) && should.exist(z);
@@ -286,7 +287,7 @@ describe('Flow', function () {
             })
         });
 
-        it('sychron parallel', function (done) {
+        it('sychron parallel 2', function (done) {
 
             flow()
                 .par({
@@ -305,7 +306,6 @@ describe('Flow', function () {
 
                     should.exist(results) && results.should.have.property('a')
                         && results.should.have.property('b') && results.should.have.property('c');
-
 
                     done();
                 })
@@ -367,6 +367,139 @@ describe('Flow', function () {
                     done();
                 })
         });
+    });
+
+    describe('#end()', function () {
+        it('end in syncron sequence', function (done) {
+
+            var a, b, c;
+
+            flow()
+                .seq("a", function(){
+                    a = 1;
+                    return 1;
+                })
+                .seq("b", function(){
+                    b = 2;
+                    this.end();
+
+                    return 2;
+                })
+                .seq("c", function(){
+                    // should not be executed
+                    c = 3;
+                    return 3;
+                })
+                .exec(function (err, results) {
+                    should.not.exist(err) && should.exist(results) &&
+                    should.exist(a) && should.exist(b) && should.not.exist(c) &&
+                    results.should.have.ownProperty("a") &&
+                    results.should.have.ownProperty("b") &&
+                    results.should.not.have.ownProperty("c") &&
+                    results.a.should.eql(1) && results.b.should.eql(2) &&
+                    a.should.eql(1) && b.should.eql(2);
+                    
+                    done();
+                })
+        });
+
+        it('end in async sequence', function (done) {
+
+            var a, b, c;
+
+            flow()
+                .seq("a", function (cb) {
+                    setTimeout(function(){
+                        a = 1;
+                        cb();
+                    }, 10);
+                })
+                .seq("b", function (cb) {
+                    setTimeout(function () {
+                        b = 2;
+                        cb.end();
+                    }, 10);
+                })
+                .seq("c", function (cb) {
+                    // should not be executed
+                    setTimeout(function () {
+                        c = 3;
+                        cb();
+                    }, 10);
+                })
+                .exec(function (err, results) {
+                    should.not.exist(err) && should.exist(results) &&
+                        should.exist(a) && should.exist(b) && should.not.exist(c) &&
+                        results.should.have.ownProperty("a") &&
+                        results.should.have.ownProperty("b") &&
+                        results.should.not.have.ownProperty("c") &&
+                        results.a.should.eql(1) && results.b.should.eql(2) &&
+                        a.should.eql(1) && b.should.eql(2);
+
+                    done();
+                })
+        });
+
+        it('end in parallel actions should ', function (done) {
+
+            var a, b, c;
+
+            flow()
+                .seq("a", function () {
+                    a = 1;
+                    return 1;
+                })
+                .seq("b", function () {
+                    b = 2;
+                    this.end();
+
+                    return 2;
+                })
+                .seq("c", function () {
+                    // should not be executed
+                    c = 3;
+                    return 3;
+                })
+                .exec(function (err, results) {
+                    should.not.exist(err) && should.exist(results) &&
+                        should.exist(a) && should.exist(b) && should.not.exist(c) &&
+                        results.should.have.ownProperty("a") &&
+                        results.should.have.ownProperty("b") &&
+                        results.should.not.have.ownProperty("c") &&
+                        results.a.should.eql(1) && results.b.should.eql(2) &&
+                        a.should.eql(1) && b.should.eql(2);
+
+                    done();
+                })
+        });
+
+        it('multiple end actions in parallel, should call action callback only once', function (done) {
+
+            var a, b, c;
+
+            flow()
+                .par({
+                    a: function() {
+                        this.end();
+                    },
+                    b: function() {
+                        this.end();
+                    }
+                })
+                .seq(function() {
+                    c = 1;
+                    throw "should not executed"
+                })
+                .exec(function (err, results) {
+                    should.not.exist(err) && should.exist(results) &&
+                        should.not.exist(c) &&
+                    ((results.should.have.ownProperty('a') && results.should.not.have.ownProperty('b')) ||
+                        (results.should.not.have.ownProperty('a') && results.should.have.ownProperty('b')));
+
+                    done();
+                })
+        });
+
     });
 
 });
