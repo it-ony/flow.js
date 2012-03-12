@@ -1,0 +1,28 @@
+{
+    "name": "flow.js",
+    "preferGlobal": "true",
+    "version": "0.1.0",
+    "author": "it-ony <flow.js@it-ony.de>",
+    "description": "a asynchronous-asynchronous flow control library which runs on node and in browsers",
+    "scripts": {
+        "start": "node ./bin/http-server",
+        "test": "vows --spec --isolate"
+    },
+    "main": "./lib/flow",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/it-ony/flow.js.git"
+    },
+    "keywords": [
+        "flow-control", "flow", "control", "async", "asynchronous", "chain",
+        "sync", "synchronous", "sequence", "parallel", "error"
+    ],
+    "devDependencies": {
+        "chai": "*",
+        "mocha": "*"
+    },
+    "license": "MIT",
+    "engine": {
+        "node": ">=0.4"
+    }
+}
