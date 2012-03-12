@@ -518,4 +518,83 @@ describe('Flow', function () {
 
     });
 
+    describe('sub flows', function () {
+        it('subflow should in own context', function (done) {
+
+            flow()
+                .seq("a", function() {
+                    return 1;
+                })
+                .seq("b", function (cb) {
+                    flow()
+                        .exec(function(err, results) {
+                            should.exist(results) && should.not.exist(err) &&
+                                results.should.not.have.ownProperty('a');
+
+                            cb(err, 2);
+                        });
+
+                })
+                .exec(function (err, results) {
+                    should.not.exist(err) && should.exist(results) &&
+                        results.should.have.ownProperty("a") &&
+                        results.should.have.ownProperty("b") &&
+                        results.a.should.eql(1) && results.b.should.eql(2);
+
+                    done();
+                })
+        });
+
+        it('chaining sub flows', function(done) {
+
+            var a, b, c;
+
+            flow()
+                .seq(function(cb) {
+
+                    flow()
+                        .seq(function(){
+                            a = 1;
+                        })
+                        .par([
+                            function() {
+                                b = 2;
+                            },
+                            function(cb) {
+                                setTimeout(function(){
+                                    c = 3;
+                                    cb();
+                                }, 10);
+                            }
+                        ])
+                        .exec(cb);
+                })
+                .seq(function(){
+                    should.exist(a) && should.exist(b) && should.exist(c);
+                })
+                .exec(function(err, results){
+                    should.not.exist(err) && should.exist(results);
+                    done();
+                });
+        });
+
+        it('error in sub flows', function (done) {
+
+            flow()
+                .seq(function (cb) {
+                    flow()
+                        .seq(function () {
+                            throw "some error"
+                        })
+                        .exec(cb);
+                })
+                .exec(function (err, results) {
+                    should.exist(err) && err.should.eql("some error");
+                    done();
+                });
+        });
+
+
+    });
+
 });
