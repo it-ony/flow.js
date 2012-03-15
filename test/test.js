@@ -516,6 +516,24 @@ describe('Flow', function () {
                 })
         });
 
+        it('end in synchron sequence with error', function (done) {
+
+            flow()
+                .seq("a", function () {
+                    this.end();
+                    throw "error"
+                })
+                .seq("b", function() {
+                    return 0;
+                })
+                .exec(function (err, results) {
+                    should.exist(err) && should.exist(results) &&
+                    results.should.not.have.ownProperty('a') && results.should.not.have.ownProperty('b');
+
+                    done();
+                })
+        });
+
     });
 
     describe('sub flows', function () {
