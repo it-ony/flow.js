@@ -4,17 +4,11 @@
 flow.js is a synchron-asynchron flow control library which runs on node and in browsers.
 The functionallity of the library is inspired by node-seq (https://github.com/substack/node-seq) and async (https://github.com/caolan/async). The source is written from scratch.
 
-## Development
-
-flow.js is currently under development. The following features will be integrated within the next days:
-
-* parEach - execute one function in parallel for each item inside a given as array or object
-
-
 ## Features
 
 * sequence flow (seq)
-* parallel flow (par)
+* parallel flow (par) - executes functions in parallel
+* parallel flow for each (parEach) - execute one function in parallel for each item inside a given as array or object
 * end       - breaks the flow from inside an action
 
 ## Possible features (if somebody like or need)
@@ -124,6 +118,64 @@ flow.js is currently under development. The following features will be integrate
             // results.a = 123;
             // results.b = "I completed after 100ms");
        });
+
+```
+
+#### synchron control parallel each without variable registration
+
+```javascript
+    flow()
+        .parEach([1, 2, 3], function(value) {
+            console.log(value);
+        })
+        .exec(function (err, results) {
+            /*
+                output in console could be
+                    1      2      3
+                    2  or  1  or  2  or ...
+                    3      3      1
+            */
+        })
+
+```
+
+#### synchron control parallel each with variable registration
+
+```javascript
+    flow()
+        .parEach({
+            a: 1,
+            b: 2,
+            c: 3
+        }, function(value) {
+            return value*3;
+        })
+        .exec(function (err, results) {
+            console.log(results);   // [3, 6, 9]
+        })
+
+```
+
+#### asynchron control parallel each with and without variable registration
+
+```javascript
+    flow()
+        .parEach(["do", "it"], function(value, cb) {
+            setTimeout(function(){
+                console.log(value); // synchron
+            }, 10);
+        })
+        .parEach({
+            a: 1,
+            b: 2
+        }, function(value, cb) {
+                    setTimeout(function(){
+                        cb(null, value*2);// doubles the value and saves it to a or b
+                    }, 10);
+                })
+        .exec(function (err, results) {
+            console.log(results);   // {a: 2, b: 4}
+        })
 
 ```
 

@@ -383,7 +383,231 @@ describe('Flow', function () {
                     done();
                 })
         });
+
+        it('use comma separated syntax', function (done) {
+
+            var a, b;
+
+            flow()
+                .par(function () {
+                        a = 1;
+                    },
+                    function (cb) {
+                        setTimeout(function(){
+                            b = 2;
+                            cb(null);
+                        }, 20);
+                    }
+                )
+                .exec(function (err) {
+                    should.not.exist(err);
+
+                    a.should.eql(1) && b.should.eql(2);
+
+                    done();
+                })
+        });
+
+        it('use comma separated syntax, throw error', function (done) {
+
+            flow()
+                .par(function () {
+                    throw "err";
+                    },
+                    function (cb) {
+                        setTimeout(function () {
+                            cb(null);
+                        }, 20);
+                    }
+                )
+                .exec(function (err) {
+                    should.exist(err);
+
+                    done();
+                })
+        });
+
+
     });
+
+
+    describe('#parEach()', function () {
+
+
+        it('empty parEach', function (done) {
+            flow()
+                .parEach([], function(value) {
+                })
+                .exec(function (err) {
+                    should.not.exist(err);
+
+                    done();
+                })
+        });
+
+        it('empty parallel with vars', function (done) {
+            flow()
+                .par({})
+                .exec(function (err) {
+                    should.not.exist(err);
+
+                    done();
+                })
+        });
+
+        it('sychron parEach', function (done) {
+
+            var x, y, z;
+
+            flow()
+                .parEach([1, 2, 3], function(value) {
+                    switch (value) {
+                        case 1:
+                            x = value;
+                            break;
+                        case 2:
+                            y = value;
+                            break;
+                        case 3:
+                            z = value;
+                            break;
+                    }
+                })
+                .exec(function (err) {
+
+                    should.not.exist(err);
+
+                    should.exist(x) && should.exist(y) && should.exist(z);
+                    x.should.eql(1) && y.should.eql(2) && z.should.eql(3);
+
+                    done();
+                })
+        });
+
+        it('asychron parEach', function (done) {
+
+            var x, y, z;
+
+            flow()
+                .parEach([1, 2, 3], function (value, cb) {
+                    setTimeout(function(){
+                        switch (value) {
+                            case 1:
+                                x = value;
+                                break;
+                            case 2:
+                                y = value;
+                                break;
+                            case 3:
+                                z = value;
+                                break;
+                        }
+                        cb()
+                    }, 10);
+                })
+                .exec(function (err) {
+
+                    should.not.exist(err);
+
+                    should.exist(x) && should.exist(y) && should.exist(z);
+                    x.should.eql(1) && y.should.eql(2) && z.should.eql(3);
+
+                    done();
+                })
+        });
+
+        it('sychron parEach with variables', function (done) {
+
+            flow()
+                .parEach({
+                    a: 1,
+                    b: 2,
+                    c: 3
+                }, function(value) {
+                    return value*3;
+                })
+                .exec(function (err, results) {
+                    should.not.exist(err);
+
+                    should.exist(results) &&
+                        results.should.have.property('a') && results.a.should.eql(3)
+                        && results.should.have.property('b') && results.b.should.eql(6)
+                        && results.should.have.property('c') && results.c.should.eql(9);
+
+                    done();
+                })
+        });
+
+        it('asychron parEach with variables', function (done) {
+
+            flow()
+                .parEach({
+                    a: 1,
+                    b: 2,
+                    c: 3
+                }, function (value, cb) {
+                    setTimeout(function(){
+                        cb(null, value*3);
+                    }, 10)
+
+                })
+                .exec(function (err, results) {
+                    should.not.exist(err);
+
+                    should.exist(results) &&
+                        results.should.have.property('a') && results.a.should.eql(3)
+                        && results.should.have.property('b') && results.b.should.eql(6)
+                        && results.should.have.property('c') && results.c.should.eql(9);
+
+                    done();
+                })
+        });
+
+
+        it('exception in synchron parEach tasks should not set a var and call exec', function (done) {
+
+            flow()
+                .parEach({
+                    a: -1,
+                    b: 0,
+                    c: 1
+                }, function (value) {
+
+                    if (value === 0) {
+                        throw "div by zero";
+                    }
+
+                    return (1 / value);
+                })
+                .exec(function (err, results) {
+                    should.exist(err);
+
+                    results.should.not.have.property('a') && results.should.not.have.property('b')
+                    && results.should.not.have.property('c');
+
+                    done();
+                })
+        });
+
+        it('2nd argument for parEach needs to be a function', function (done) {
+
+            try {
+                flow()
+                    .parEach({
+                        a: -1,
+                        b: 0,
+                        c: 1
+                    })
+                    .exec(function () {
+                    })
+            } catch (e) {
+                e.should.eql("2nd argument for parEach needs to be a function");
+                done();
+            }
+        });
+
+    });
+
 
     describe('#end()', function () {
         it('end in syncron sequence', function (done) {
