@@ -6,7 +6,10 @@ The functionallity of the library is inspired by node-seq (https://github.com/su
 
 ## Development
 
-flow.js is currently in an early state.
+flow.js is currently under development. The following features will be integrated within the next days:
+
+* parEach - execute one function in parallel for each item inside a given as array or object
+
 
 ## Features
 
@@ -16,7 +19,7 @@ flow.js is currently in an early state.
 
 ## Possible features (if somebody like or need)
 
-* seq each  - execute sequence for each function given as array
+* seqEach  - execute sequence for each function given as array
 * catch     - adds a catch action, which will handle erros instead of exec action
 * autoexec  - automatically execute flow
 
