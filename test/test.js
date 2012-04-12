@@ -100,6 +100,22 @@ describe('Flow', function () {
                 })
         });
 
+        it('asynchron sequence with unhandled exception', function (done) {
+            flow()
+                .seq(function (cb) {
+                    throw "unexpected error";
+
+                    // asychron
+                    cb();
+                })
+                .exec(function (err, results) {
+                    should.exist(err);
+
+                    done();
+                })
+        });
+
+
         it('sequence should execute after each', function (done) {
 
             var x;
@@ -302,6 +318,38 @@ describe('Flow', function () {
                 done();
             })
         });
+
+        it('asychron parallel with unhandled exception', function (done) {
+
+            var x, y, z;
+
+            flow()
+                .par([
+                    function (cb) {
+                        setTimeout(function () {
+                            x = 1;
+                            cb(null);
+                        }, 20);
+                    },
+                    function (cb) {
+
+                        throw "unhandled exception";
+
+                        setTimeout(function () {
+                            y = 2;
+                            cb(null);
+                        }, 20);
+                    }
+                ])
+                .exec(function (err) {
+
+                    should.not.exist(x) && should.not.exist(y);
+                    should.exist(err);
+
+                    done();
+                })
+        });
+
 
         it('sychron parallel 2', function (done) {
 
