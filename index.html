@@ -1,0 +1,277 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Flow.js by it-ony</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Flow.js</h1>
+        <p>synchron, asynchron control flow javascript library</p>
+        <p class="view"><a href="https://github.com/it-ony/flow.js">View the Project on GitHub <small>it-ony/flow.js</small></a></p>
+        <ul>
+          <li><a href="https://github.com/it-ony/flow.js/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/it-ony/flow.js/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/it-ony/flow.js">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>flow.js</h1>
+
+<h2>Introduction</h2>
+
+<p>flow.js is a synchron-asynchron flow control library which runs on node and in browsers.
+The functionallity of the library is inspired by node-seq (<a href="https://github.com/substack/node-seq">https://github.com/substack/node-seq</a>) and async (<a href="https://github.com/caolan/async">https://github.com/caolan/async</a>). The source is written from scratch.</p>
+
+<h2>Features</h2>
+
+<ul>
+<li>sequence flow (seq)</li>
+<li>parallel flow (par) - executes functions in parallel</li>
+<li>parallel flow for each (parEach) - execute one function in parallel for each item inside a given as array or object</li>
+<li>end       - breaks the flow from inside an action</li>
+</ul><h2>Possible features (if somebody like or need)</h2>
+
+<ul>
+<li>seqEach  - execute sequence for each function given as array</li>
+<li>catch     - adds a catch action, which will handle erros instead of exec action</li>
+<li>autoexec  - automatically execute flow</li>
+</ul><h2>Usage</h2>
+
+<h3>Create a flow and execute</h3>
+
+<div class="highlight">
+<pre>
+    <span class="nx">flow</span><span class="p">()</span>
+       <span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// some error inside the flow</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="c1">// access to results</span>
+            <span class="p">}</span>
+       <span class="p">});</span>
+</pre>
+</div>
+
+
+<h3>Add a sequence</h3>
+
+<h4>execute synchron method in sequence</h4>
+
+<div class="highlight">
+<pre>    <span class="nx">flow</span><span class="p">()</span>
+       <span class="p">.</span><span class="nx">seq</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+           <span class="c1">// do something synchron</span>
+       <span class="p">})</span>
+       <span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>           
+       <span class="p">});</span>
+
+</pre>
+</div>
+
+
+<h4>execute synchron method in sequence</h4>
+
+<div class="highlight">
+<pre>    <span class="nx">flow</span><span class="p">()</span>
+       <span class="p">.</span><span class="nx">seq</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">cb</span><span class="p">){</span>
+           <span class="c1">// do something asynchron</span>
+           <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+                <span class="c1">// invoke callback</span>
+                <span class="nx">cb</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="s2">"result of this sequence"</span><span class="p">);</span>
+           <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+       <span class="p">})</span>
+       <span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+       <span class="p">});</span>
+
+</pre>
+</div>
+
+
+<h4>sequence with variable registration</h4>
+
+<div class="highlight">
+<pre>    <span class="nx">flow</span><span class="p">()</span>
+       <span class="p">.</span><span class="nx">seq</span><span class="p">(</span><span class="s2">"myVar"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+           <span class="k">return</span> <span class="s2">"valueOfMyVar"</span><span class="p">;</span>
+       <span class="p">})</span>
+       <span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">myVar</span><span class="p">);</span>
+       <span class="p">});</span>
+
+</pre>
+</div>
+
+
+<h3>Add parallel control flow</h3>
+
+<h4>asynchron and synchron control parallel control flows</h4>
+
+<div class="highlight">
+<pre>    <span class="nx">flow</span><span class="p">()</span>
+       <span class="p">.</span><span class="nx">par</span><span class="p">([</span>
+            <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="c1">// synchron method</span>
+            <span class="p">},</span>
+            <span class="kd">function</span> <span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// asynchron method</span>
+            <span class="p">}</span>
+            <span class="c1">// and even more</span>
+       <span class="p">])</span>
+       <span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+       <span class="p">});</span>
+
+</pre>
+</div>
+
+
+<h4>asynchron and synchron control parallel with variable registration</h4>
+
+<div class="highlight">
+<pre>    <span class="nx">flow</span><span class="p">()</span>
+       <span class="p">.</span><span class="nx">par</span><span class="p">({</span>
+            <span class="nx">a</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="c1">// synchron method</span>
+                <span class="k">return</span> <span class="mi">123</span><span class="p">;</span>
+            <span class="p">},</span>
+            <span class="nx">b</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// asynchron method</span>
+                <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+                    <span class="nx">cb</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="s2">"I completed after 100ms"</span><span class="p">);</span>
+                <span class="p">},</span> <span class="mi">100</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="c1">// and even more</span>
+       <span class="p">})</span>
+       <span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">results</span><span class="p">);</span>
+            <span class="c1">// results.a = 123;</span>
+            <span class="c1">// results.b = "I completed after 100ms");</span>
+       <span class="p">});</span>
+
+</pre>
+</div>
+
+
+<h4>synchron control parallel each without variable registration</h4>
+
+<div class="highlight">
+<pre>    <span class="nx">flow</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">parEach</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+        <span class="p">})</span>
+        <span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+            <span class="cm">/*</span>
+<span class="cm">                output in console could be</span>
+<span class="cm">                    1      2      3</span>
+<span class="cm">                    2  or  1  or  2  or ...</span>
+<span class="cm">                    3      3      1</span>
+<span class="cm">            */</span>
+        <span class="p">})</span>
+
+</pre>
+</div>
+
+
+<h4>synchron control parallel each with variable registration</h4>
+
+<div class="highlight">
+<pre>    <span class="nx">flow</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">parEach</span><span class="p">({</span>
+            <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="nx">b</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="nx">c</span><span class="o">:</span> <span class="mi">3</span>
+        <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">value</span><span class="o">*</span><span class="mi">3</span><span class="p">;</span>
+        <span class="p">})</span>
+        <span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">results</span><span class="p">);</span>   <span class="c1">// [3, 6, 9]</span>
+        <span class="p">})</span>
+
+</pre>
+</div>
+
+
+<h4>asynchron control parallel each with and without variable registration</h4>
+
+<div class="highlight">
+<pre>    <span class="nx">flow</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">parEach</span><span class="p">([</span><span class="s2">"do"</span><span class="p">,</span> <span class="s2">"it"</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span> <span class="c1">// synchron</span>
+            <span class="p">},</span> <span class="mi">10</span><span class="p">);</span>
+        <span class="p">})</span>
+        <span class="p">.</span><span class="nx">parEach</span><span class="p">({</span>
+            <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="nx">b</span><span class="o">:</span> <span class="mi">2</span>
+        <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+                        <span class="nx">cb</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">value</span><span class="o">*</span><span class="mi">2</span><span class="p">);</span><span class="c1">// doubles the value and saves it to a or b</span>
+                    <span class="p">},</span> <span class="mi">10</span><span class="p">);</span>
+                <span class="p">})</span>
+        <span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">results</span><span class="p">);</span>   <span class="c1">// {a: 2, b: 4}</span>
+        <span class="p">})</span>
+
+</pre>
+</div>
+
+
+<h3>end flow from inside an synchron action</h3>
+
+<div class="highlight">
+<pre>    <span class="nx">flow</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">seq</span><span class="p">(</span><span class="s2">"a"</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="c1">// do something</span>
+        <span class="p">}</span>
+        <span class="p">.</span><span class="nx">par</span><span class="p">({</span>
+            <span class="nx">b</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="c1">// do something synchron in parallel ...</span>
+
+                <span class="c1">// end flow on condition</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">condition</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span> <span class="c1">// end flow after return statement</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mi">2</span><span class="p">;</span>
+                <span class="p">}</span>
+
+                <span class="k">return</span> <span class="mi">2</span><span class="p">;</span>
+            <span class="p">},</span>
+            <span class="nx">c</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// ... with something asynchron</span>
+
+                <span class="c1">// end flow the asynchron way</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span> <span class="c1">// or cb.end(null, 3) or cb(null, 3, true) or this(null, 3, true)</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="p">.</span><span class="nx">seq</span><span class="p">(</span><span class="s2">"e"</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="c1">// this would executed, because either b or c will end the flow</span>
+        <span class="p">}</span>
+        <span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+            <span class="cm">/* this function is called on</span>
+<span class="cm">               * error thrown in synchron method</span>
+<span class="cm">               * error object passed in asynchron method</span>
+<span class="cm">               * this.end() is called</span>
+<span class="cm">               * flow is executed completely</span>
+<span class="cm">            */</span>
+        <span class="p">});</span>
+</pre>
+</div>
+
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/it-ony">it-ony</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
