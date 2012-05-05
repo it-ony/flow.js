@@ -9,11 +9,11 @@ The functionallity of the library is inspired by node-seq (https://github.com/su
 * sequence flow (seq)
 * parallel flow (par) - executes functions in parallel
 * parallel flow for each (parEach) - execute one function in parallel for each item inside a given as array or object
-* end       - breaks the flow from inside an action
+* seqEach - execute sequence for each function given as array
+* end  - breaks the flow from inside an action
 
 ## Possible features (if somebody like or need)
 
-* seqEach  - execute sequence for each function given as array
 * catch     - adds a catch action, which will handle erros instead of exec action
 * autoexec  - automatically execute flow
 

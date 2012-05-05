@@ -656,6 +656,57 @@ describe('Flow', function () {
 
     });
 
+    describe('#seqEach()', function () {
+
+
+        it('empty seqEach', function (done) {
+            flow()
+                .seqEach([], function (value) {
+                    throw "should not be called";
+                })
+                .exec(function (err) {
+                    should.not.exist(err);
+
+                    done();
+                })
+        });
+
+        it('synchron seqEach', function (done) {
+
+
+            var a, b, c;
+
+            flow()
+                .seqEach([1, 2, 3], function (value) {
+                    if (value === 1) {
+                        should.not.exist(a) && should.not.exist(b) && should.not.exist(c);
+                        a = value;
+                    }
+
+                    if (value === 2) {
+                        should.exist(a) && a.should.eql(1) &&
+                            should.not.exist(b) && should.not.exist(c);
+                        b = value;
+                    }
+
+                    if (value === 3) {
+                        should.exist(a) && a.should.eql(1) &&
+                            should.exist(b) && b.should.eql(2) &&
+                                should.not.exist(c);
+                        c = value;
+                    }
+                })
+                .exec(function (err) {
+                    should.not.exist(err) &&
+                        should.exist(a) && a.should.eql(1) &&
+                        should.exist(b) && b.should.eql(2) &&
+                        should.exist(c) && c.should.eql(3);
+                    done();
+                })
+        });
+
+
+    });
 
     describe('#end()', function () {
         it('end in syncron sequence', function (done) {
