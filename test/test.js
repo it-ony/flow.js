@@ -77,7 +77,8 @@ describe('Flow', function () {
                 .exec(function (err, results) {
                     should.not.exist(err);
 
-                    results.should.have.ownProperty('x') && results.x.should.eql("y");
+                    results.should.have.ownProperty('x');
+                    results.x.should.eql("y");
                     Object.keys(results).length.should.eql(1);
 
                     done();
@@ -93,7 +94,8 @@ describe('Flow', function () {
                 .exec(function (err, results) {
                     should.not.exist(err);
 
-                    results.should.have.ownProperty('x') && results.x.should.eql("y");
+                    results.should.have.ownProperty('x');
+                    results.x.should.eql("y");
                     Object.keys(results).length.should.eql(1);
 
                     done();
@@ -130,7 +132,8 @@ describe('Flow', function () {
                 })
                 .seq(function () {
                     // synchron
-                    should.exist(x) && x.should.eql(123);
+                    should.exist(x);
+                    x.should.eql(123);
                 })
                 .exec(function (err, results) {
                     should.not.exist(err);
@@ -148,14 +151,17 @@ describe('Flow', function () {
                 })
                 .seq("y", function () {
                     // synchron
-                    this.vars.should.have.property('x') && this.vars.x.should.eql('x');
+                    this.vars.should.have.property('x');
+                    this.vars.x.should.eql('x');
                     return "y";
                 })
                 .exec(function (err, results) {
                     should.not.exist(err);
 
-                    results.should.have.ownProperty('x') && results.x.should.eql("x") &&
-                    results.should.have.ownProperty('y') && results.y.should.eql("y");
+                    results.should.have.ownProperty('x');
+                    results.x.should.eql("x");
+                    results.should.have.ownProperty('y');
+                    results.y.should.eql("y");
 
                     Object.keys(results).length.should.eql(2);
 
@@ -198,7 +204,8 @@ describe('Flow', function () {
                     x = 123;
                 })
                 .exec(function (err, results) {
-                    should.exist(err) && should.not.exists(x);
+                    should.exist(err);
+                    should.not.exist(x);
                     done();
                 })
         });
@@ -277,8 +284,12 @@ describe('Flow', function () {
 
                     should.not.exist(err);
 
-                    should.exist(x) && should.exist(y) && should.exist(z);
-                    x.should.eql(1) && y.should.eql(2) && z.should.eql(3);
+                    should.exist(x);
+                    should.exist(y);
+                    should.exist(z);
+                    x.should.eql(1);
+                    y.should.eql(2);
+                    z.should.eql(3);
 
                     done();
                 })
@@ -312,8 +323,12 @@ describe('Flow', function () {
             .exec(function (err) {
                 should.not.exist(err);
 
-                should.exist(x) && should.exist(y) && should.exist(z);
-                x.should.eql(1) && y.should.eql(2) && z.should.eql(3);
+                should.exist(x);
+                should.exist(y);
+                should.exist(z);
+                x.should.eql(1);
+                y.should.eql(2);
+                z.should.eql(3);
 
                 done();
             })
@@ -343,7 +358,8 @@ describe('Flow', function () {
                 ])
                 .exec(function (err) {
 
-                    should.not.exist(x) && should.not.exist(y);
+                    should.not.exist(x);
+                    should.not.exist(y);
                     should.exist(err);
 
                     done();
@@ -368,8 +384,10 @@ describe('Flow', function () {
                 .exec(function (err, results) {
                     should.not.exist(err);
 
-                    should.exist(results) && results.should.have.property('a')
-                        && results.should.have.property('b') && results.should.have.property('c');
+                    should.exist(results);
+                    results.should.have.property('a');
+                    results.should.have.property('b');
+                    results.should.have.property('c');
 
                     done();
                 })
@@ -399,10 +417,14 @@ describe('Flow', function () {
                 .exec(function (err, results) {
                     should.not.exist(err);
 
-                    should.exist(results) && results.should.have.property('a')
-                    && results.should.have.property('b') && results.should.have.property('c');
+                    should.exist(results);
+                    results.should.have.property('a');
+                    results.should.have.property('b');
+                    results.should.have.property('c');
 
-                    results.a.should.eql(1) && results.b.should.equal(2) && results.c.should.eql(3);
+                    results.a.should.eql(1);
+                    results.b.should.equal(2);
+                    results.c.should.eql(3);
 
                     done();
                 })
@@ -425,8 +447,9 @@ describe('Flow', function () {
                 .exec(function (err, results) {
                     should.exist(err);
 
-                    results.should.not.have.property('a') && results.should.not.have.property('b')
-                        && results.should.not.have.property('c');
+                    results.should.not.have.property('a');
+                    results.should.not.have.property('b');
+                    results.should.not.have.property('c');
 
                     done();
                 })
@@ -450,7 +473,8 @@ describe('Flow', function () {
                 .exec(function (err) {
                     should.not.exist(err);
 
-                    a.should.eql(1) && b.should.eql(2);
+                    a.should.eql(1);
+                    b.should.eql(2);
 
                     done();
                 })
@@ -525,8 +549,12 @@ describe('Flow', function () {
 
                     should.not.exist(err);
 
-                    should.exist(x) && should.exist(y) && should.exist(z);
-                    x.should.eql(1) && y.should.eql(2) && z.should.eql(3);
+                    should.exist(x);
+                    should.exist(y);
+                    should.exist(z);
+                    x.should.eql(1);
+                    y.should.eql(2);
+                    z.should.eql(3);
 
                     done();
                 })
@@ -557,8 +585,12 @@ describe('Flow', function () {
 
                     should.not.exist(err);
 
-                    should.exist(x) && should.exist(y) && should.exist(z);
-                    x.should.eql(1) && y.should.eql(2) && z.should.eql(3);
+                    should.exist(x);
+                    should.exist(y);
+                    should.exist(z);
+                    x.should.eql(1);
+                    y.should.eql(2);
+                    z.should.eql(3);
 
                     done();
                 })
@@ -577,10 +609,13 @@ describe('Flow', function () {
                 .exec(function (err, results) {
                     should.not.exist(err);
 
-                    should.exist(results) &&
-                        results.should.have.property('a') && results.a.should.eql(3)
-                        && results.should.have.property('b') && results.b.should.eql(6)
-                        && results.should.have.property('c') && results.c.should.eql(9);
+                    should.exist(results);
+                    results.should.have.property('a');
+                    results.a.should.eql(3);
+                    results.should.have.property('b');
+                    results.b.should.eql(6);
+                    results.should.have.property('c');
+                    results.c.should.eql(9);
 
                     done();
                 })
@@ -602,10 +637,13 @@ describe('Flow', function () {
                 .exec(function (err, results) {
                     should.not.exist(err);
 
-                    should.exist(results) &&
-                        results.should.have.property('a') && results.a.should.eql(3)
-                        && results.should.have.property('b') && results.b.should.eql(6)
-                        && results.should.have.property('c') && results.c.should.eql(9);
+                    should.exist(results);
+                    results.should.have.property('a');
+                    results.a.should.eql(3);
+                    results.should.have.property('b');
+                    results.b.should.eql(6);
+                    results.should.have.property('c');
+                    results.c.should.eql(9);
 
                     done();
                 })
@@ -630,8 +668,9 @@ describe('Flow', function () {
                 .exec(function (err, results) {
                     should.exist(err);
 
-                    results.should.not.have.property('a') && results.should.not.have.property('b')
-                    && results.should.not.have.property('c');
+                    results.should.not.have.property('a');
+                    results.should.not.have.property('b');
+                    results.should.not.have.property('c');
 
                     done();
                 })
@@ -679,28 +718,37 @@ describe('Flow', function () {
             flow()
                 .seqEach([1, 2, 3], function (value) {
                     if (value === 1) {
-                        should.not.exist(a) && should.not.exist(b) && should.not.exist(c);
+                        should.not.exist(a);
+                        should.not.exist(b);
+                        should.not.exist(c);
                         a = value;
                     }
 
                     if (value === 2) {
-                        should.exist(a) && a.should.eql(1) &&
-                            should.not.exist(b) && should.not.exist(c);
+                        should.exist(a);
+                        a.should.eql(1);
+                        should.not.exist(b);
+                        should.not.exist(c);
                         b = value;
                     }
 
                     if (value === 3) {
-                        should.exist(a) && a.should.eql(1) &&
-                            should.exist(b) && b.should.eql(2) &&
-                                should.not.exist(c);
+                        should.exist(a);
+                        a.should.eql(1);
+                        should.exist(b);
+                        b.should.eql(2);
+                        should.not.exist(c);
                         c = value;
                     }
                 })
                 .exec(function (err) {
-                    should.not.exist(err) &&
-                        should.exist(a) && a.should.eql(1) &&
-                        should.exist(b) && b.should.eql(2) &&
-                        should.exist(c) && c.should.eql(3);
+                    should.not.exist(err);
+                        should.exist(a);
+                        a.should.eql(1);
+                        should.exist(b);
+                        b.should.eql(2);
+                        should.exist(c);
+                        c.should.eql(3);
                     done();
                 })
         });
@@ -730,13 +778,18 @@ describe('Flow', function () {
                     return 3;
                 })
                 .exec(function (err, results) {
-                    should.not.exist(err) && should.exist(results) &&
-                    should.exist(a) && should.exist(b) && should.not.exist(c) &&
-                    results.should.have.ownProperty("a") &&
-                    results.should.have.ownProperty("b") &&
-                    results.should.not.have.ownProperty("c") &&
-                    results.a.should.eql(1) && results.b.should.eql(2) &&
-                    a.should.eql(1) && b.should.eql(2);
+                    should.not.exist(err);
+                    should.exist(results);
+                    should.exist(a);
+                    should.exist(b);
+                    should.not.exist(c);
+                    results.should.have.ownProperty("a");
+                    results.should.have.ownProperty("b");
+                    results.should.not.have.ownProperty("c");
+                    results.a.should.eql(1);
+                    results.b.should.eql(2);
+                    a.should.eql(1);
+                    b.should.eql(2);
                     
                     done();
                 })
@@ -750,13 +803,13 @@ describe('Flow', function () {
                 .seq("a", function (cb) {
                     setTimeout(function(){
                         a = 1;
-                        cb();
+                        cb(null, 1);
                     }, 10);
                 })
                 .seq("b", function (cb) {
                     setTimeout(function () {
                         b = 2;
-                        cb.end();
+                        cb.end(null, 2);
                     }, 10);
                 })
                 .seq("c", function (cb) {
@@ -767,13 +820,18 @@ describe('Flow', function () {
                     }, 10);
                 })
                 .exec(function (err, results) {
-                    should.not.exist(err) && should.exist(results) &&
-                        should.exist(a) && should.exist(b) && should.not.exist(c) &&
-                        results.should.have.ownProperty("a") &&
-                        results.should.have.ownProperty("b") &&
-                        results.should.not.have.ownProperty("c") &&
-                        results.a.should.eql(1) && results.b.should.eql(2) &&
-                        a.should.eql(1) && b.should.eql(2);
+                    should.not.exist(err);
+                    should.exist(results);
+                    should.exist(a);
+                    should.exist(b);
+                    should.not.exist(c);
+                    results.should.have.ownProperty("a");
+                    results.should.have.ownProperty("b");
+                    results.should.not.have.ownProperty("c");
+                    results.a.should.eql(1);
+                    results.b.should.eql(2);
+                    a.should.eql(1);
+                    b.should.eql(2);
 
                     done();
                 })
@@ -800,13 +858,18 @@ describe('Flow', function () {
                     return 3;
                 })
                 .exec(function (err, results) {
-                    should.not.exist(err) && should.exist(results) &&
-                        should.exist(a) && should.exist(b) && should.not.exist(c) &&
-                        results.should.have.ownProperty("a") &&
-                        results.should.have.ownProperty("b") &&
-                        results.should.not.have.ownProperty("c") &&
-                        results.a.should.eql(1) && results.b.should.eql(2) &&
-                        a.should.eql(1) && b.should.eql(2);
+                    should.not.exist(err);
+                    should.exist(results);
+                    should.exist(a);
+                    should.exist(b);
+                    should.not.exist(c);
+                    results.should.have.ownProperty("a");
+                    results.should.have.ownProperty("b");
+                    results.should.not.have.ownProperty("c");
+                    results.a.should.eql(1);
+                    results.b.should.eql(2);
+                    a.should.eql(1);
+                    b.should.eql(2);
 
                     done();
                 })
@@ -818,26 +881,29 @@ describe('Flow', function () {
 
             flow()
                 .par({
-                    a: function() {
+                    a: function () {
                         this.end();
                     },
-                    b: function() {
+                    b: function () {
                         this.end();
                     }
                 })
-                .seq(function() {
+                .seq(function () {
                     c = 1;
                     throw "should not executed"
                 })
                 .exec(function (err, results) {
-                    should.not.exist(err) && should.exist(results) &&
-                        should.not.exist(c) &&
-                    ((results.should.have.ownProperty('a') && results.should.not.have.ownProperty('b')) ||
-                        (results.should.not.have.ownProperty('a') && results.should.have.ownProperty('b')));
+                    should.not.exist(err);
+                    should.exist(results);
+                    should.not.exist(c);
+
+                    results.should.not.have.ownProperty('a');
+                    results.should.not.have.ownProperty('b');
 
                     done();
                 })
         });
+
 
         it('end in synchron sequence with error', function (done) {
 
@@ -850,10 +916,56 @@ describe('Flow', function () {
                     return 0;
                 })
                 .exec(function (err, results) {
-                    should.exist(err) && should.exist(results) &&
-                    results.should.not.have.ownProperty('a') && results.should.not.have.ownProperty('b');
+                    should.exist(err);
+                    should.exist(results);
+                    results.should.not.have.ownProperty('a');
+                    results.should.not.have.ownProperty('b');
 
                     done();
+                })
+        });
+
+        it('multiple end', function (done) {
+
+            var execCount = 0;
+
+            flow()
+                .seq(function () {
+                    this.end();
+                    this.end();
+                })
+                .exec(function (err) {
+                    should.not.exist(err);
+                    execCount++;
+
+                    setTimeout(function() {
+                        execCount.should.eql(1);
+                        done();
+                    }, 10);
+
+            })
+        });
+
+        it('end and callback', function (done) {
+
+            var execCount = 0;
+
+            flow()
+                .seq(function (cb) {
+                    this.end();
+                    cb();
+                })
+                .seq(function() {
+                    throw "should not cal this block"
+                })
+                .exec(function (err) {
+                    execCount++;
+
+                    setTimeout(function () {
+                        execCount.should.eql(1);
+                        done();
+                    }, 10);
+
                 })
         });
 
@@ -877,10 +989,12 @@ describe('Flow', function () {
 
                 })
                 .exec(function (err, results) {
-                    should.not.exist(err) && should.exist(results) &&
-                        results.should.have.ownProperty("a") &&
-                        results.should.have.ownProperty("b") &&
-                        results.a.should.eql(1) && results.b.should.eql(2);
+                    should.not.exist(err);
+                    should.exist(results);
+                    results.should.have.ownProperty("a");
+                    results.should.have.ownProperty("b");
+                    results.a.should.eql(1);
+                    results.b.should.eql(2);
 
                     done();
                 })
@@ -911,10 +1025,13 @@ describe('Flow', function () {
                         .exec(cb);
                 })
                 .seq(function(){
-                    should.exist(a) && should.exist(b) && should.exist(c);
+                    should.exist(a);
+                    should.exist(b);
+                    should.exist(c);
                 })
                 .exec(function(err, results){
-                    should.not.exist(err) && should.exist(results);
+                    should.not.exist(err);
+                    should.exist(results);
                     done();
                 });
         });
@@ -930,7 +1047,8 @@ describe('Flow', function () {
                         .exec(cb);
                 })
                 .exec(function (err, results) {
-                    should.exist(err) && err.should.eql("some error");
+                    should.exist(err);
+                    err.should.eql("some error");
                     done();
                 });
         });
