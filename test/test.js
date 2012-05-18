@@ -1,5 +1,6 @@
-var flow = require(__dirname + '/../lib/flow').flow;
-var should = require('chai').should();
+var flow = require(__dirname + '/../lib/flow').flow,
+    Flow = require(__dirname + '/../lib/flow').Flow,
+    should = require('chai').should();
 
 describe('Flow', function () {
     describe('#exec()', function () {
@@ -36,6 +37,19 @@ describe('Flow', function () {
                 should.not.exist(a);
                 done();
             }, 10);
+
+        });
+
+        it('exception in exec should call errorHandler', function (done) {
+
+            var f = flow();
+            f.errorHandler = function (e) {
+                done();
+            };
+
+            f.exec(function() {
+                    throw "error";
+                });
 
         });
 

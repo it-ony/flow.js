@@ -218,3 +218,9 @@ The functionallity of the library is inspired by node-seq (https://github.com/su
             */
         });
 ```
+
+## Changelog
+
+### 0.2.3
+
+* added global error handler, which get called if an error occurs in exec block

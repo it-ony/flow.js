@@ -1,7 +1,7 @@
 {
     "name": "flow.js",
     "preferGlobal": "true",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "author": "it-ony <flow.js@it-ony.de>",
     "description": "a asynchronous-asynchronous flow control library which runs on node and in browsers",
     "scripts": {
