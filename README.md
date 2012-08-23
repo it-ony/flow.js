@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/it-ony/flow.js.png)](http://travis-ci.org/it-ony/flow.js)
 # flow.js
 ## Introduction
 
