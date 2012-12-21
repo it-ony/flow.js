@@ -33,7 +33,7 @@ describe('Flow', function () {
                     a = 1;
                 });
 
-            setTimeout(function() {
+            setTimeout(function () {
                 should.not.exist(a);
                 done();
             }, 10);
@@ -47,9 +47,9 @@ describe('Flow', function () {
                 done();
             };
 
-            f.exec(function() {
-                    throw "error";
-                });
+            f.exec(function () {
+                throw "error";
+            });
 
         });
 
@@ -58,7 +58,7 @@ describe('Flow', function () {
     describe('#seq()', function () {
         it('synchron sequence', function (done) {
             flow()
-                .seq(function(){
+                .seq(function () {
                     // synchron
                 })
                 .exec(function (err, data) {
@@ -71,7 +71,7 @@ describe('Flow', function () {
         it('synchron sequence', function (done) {
             flow()
                 .seq(function (cb) {
-                    setTimeout(function() {
+                    setTimeout(function () {
                         cb(null)
                     }, 20);
                 })
@@ -159,7 +159,7 @@ describe('Flow', function () {
             flow()
                 .seq("x", function (cb) {
                     // asynchron
-                    setTimeout(function(){
+                    setTimeout(function () {
                         cb(null, "x")
                     }, 5);
                 })
@@ -214,7 +214,7 @@ describe('Flow', function () {
                 .seq(function (cb) {
                     cb("error");
                 })
-                .seq(function(){
+                .seq(function () {
                     x = 123;
                 })
                 .exec(function (err, results) {
@@ -284,16 +284,16 @@ describe('Flow', function () {
 
             flow()
                 .par([
-                    function() {
-                        x = 1;
-                    },
-                    function() {
-                        y = 2;
-                    },
-                    function() {
-                        z = 3;
-                    }
-                ])
+                function () {
+                    x = 1;
+                },
+                function () {
+                    y = 2;
+                },
+                function () {
+                    z = 3;
+                }
+            ])
                 .exec(function (err, results) {
 
                     should.not.exist(err);
@@ -316,7 +316,7 @@ describe('Flow', function () {
             flow()
                 .par([
                 function (cb) {
-                    setTimeout(function(){
+                    setTimeout(function () {
                         x = 1;
                         cb(null);
                     }, 20);
@@ -334,18 +334,18 @@ describe('Flow', function () {
                     }, 20);
                 }
             ])
-            .exec(function (err) {
-                should.not.exist(err);
+                .exec(function (err) {
+                    should.not.exist(err);
 
-                should.exist(x);
-                should.exist(y);
-                should.exist(z);
-                x.should.eql(1);
-                y.should.eql(2);
-                z.should.eql(3);
+                    should.exist(x);
+                    should.exist(y);
+                    should.exist(z);
+                    x.should.eql(1);
+                    y.should.eql(2);
+                    z.should.eql(3);
 
-                done();
-            })
+                    done();
+                })
         });
 
         it('asychron parallel with unhandled exception', function (done) {
@@ -354,22 +354,22 @@ describe('Flow', function () {
 
             flow()
                 .par([
-                    function (cb) {
-                        setTimeout(function () {
-                            x = 1;
-                            cb(null);
-                        }, 20);
-                    },
-                    function (cb) {
+                function (cb) {
+                    setTimeout(function () {
+                        x = 1;
+                        cb(null);
+                    }, 20);
+                },
+                function (cb) {
 
-                        throw "unhandled exception";
+                    throw "unhandled exception";
 
-                        setTimeout(function () {
-                            y = 2;
-                            cb(null);
-                        }, 20);
-                    }
-                ])
+                    setTimeout(function () {
+                        y = 2;
+                        cb(null);
+                    }, 20);
+                }
+            ])
                 .exec(function (err) {
 
                     should.not.exist(x);
@@ -475,15 +475,15 @@ describe('Flow', function () {
 
             flow()
                 .par(function () {
-                        a = 1;
-                    },
-                    function (cb) {
-                        setTimeout(function(){
-                            b = 2;
-                            cb(null);
-                        }, 20);
-                    }
-                )
+                    a = 1;
+                },
+                function (cb) {
+                    setTimeout(function () {
+                        b = 2;
+                        cb(null);
+                    }, 20);
+                }
+            )
                 .exec(function (err) {
                     should.not.exist(err);
 
@@ -499,13 +499,13 @@ describe('Flow', function () {
             flow()
                 .par(function () {
                     throw "err";
-                    },
-                    function (cb) {
-                        setTimeout(function () {
-                            cb(null);
-                        }, 20);
-                    }
-                )
+                },
+                function (cb) {
+                    setTimeout(function () {
+                        cb(null);
+                    }, 20);
+                }
+            )
                 .exec(function (err) {
                     should.exist(err);
 
@@ -522,7 +522,7 @@ describe('Flow', function () {
 
         it('empty parEach', function (done) {
             flow()
-                .parEach([], function(value) {
+                .parEach([], function (value) {
                 })
                 .exec(function (err) {
                     should.not.exist(err);
@@ -543,19 +543,23 @@ describe('Flow', function () {
 
         it('sychron parEach', function (done) {
 
-            var x, y, z;
+            var x, y, z,
+                xIndex, yIndex, zIndex;
 
             flow()
-                .parEach([1, 2, 3], function(value) {
+                .parEach([1, 2, 3], function (value) {
                     switch (value) {
                         case 1:
                             x = value;
+                            xIndex = this.key;
                             break;
                         case 2:
                             y = value;
+                            yIndex = this.key;
                             break;
                         case 3:
                             z = value;
+                            zIndex = this.key;
                             break;
                     }
                 })
@@ -566,30 +570,43 @@ describe('Flow', function () {
                     should.exist(x);
                     should.exist(y);
                     should.exist(z);
+
+                    should.exist(xIndex);
+                    should.exist(yIndex);
+                    should.exist(zIndex);
+
                     x.should.eql(1);
                     y.should.eql(2);
                     z.should.eql(3);
+
+                    xIndex.should.eql(0);
+                    yIndex.should.eql(1);
+                    zIndex.should.eql(2);
 
                     done();
                 })
         });
 
-        it('asychron parEach', function (done) {
+        it('asychron parEach with key', function (done) {
 
-            var x, y, z;
+            var x, y, z,
+                xIndex, yIndex, zIndex;
 
             flow()
-                .parEach([1, 2, 3], function (value, cb) {
-                    setTimeout(function(){
+                .parEach([1, 2, 3], function (value, key, cb) {
+                    setTimeout(function () {
                         switch (value) {
                             case 1:
                                 x = value;
+                                xIndex = key;
                                 break;
                             case 2:
                                 y = value;
+                                yIndex = key;
                                 break;
                             case 3:
                                 z = value;
+                                zIndex = key;
                                 break;
                         }
                         cb()
@@ -602,9 +619,68 @@ describe('Flow', function () {
                     should.exist(x);
                     should.exist(y);
                     should.exist(z);
+
+                    should.exist(xIndex);
+                    should.exist(yIndex);
+                    should.exist(zIndex);
+
                     x.should.eql(1);
                     y.should.eql(2);
                     z.should.eql(3);
+
+                    xIndex.should.eql(0);
+                    yIndex.should.eql(1);
+                    zIndex.should.eql(2);
+
+                    done();
+                })
+        });
+
+        it('asychron parEach', function (done) {
+
+            var x, y, z,
+                xIndex, yIndex, zIndex;
+
+            flow()
+                .parEach([1, 2, 3], function (value, cb) {
+                    var self = this;
+                    setTimeout(function () {
+                        switch (value) {
+                            case 1:
+                                x = value;
+                                xIndex = self.key;
+                                break;
+                            case 2:
+                                y = value;
+                                yIndex = self.key;
+                                break;
+                            case 3:
+                                z = value;
+                                zIndex = self.key;
+                                break;
+                        }
+                        cb()
+                    }, 10);
+                })
+                .exec(function (err) {
+
+                    should.not.exist(err);
+
+                    should.exist(x);
+                    should.exist(y);
+                    should.exist(z);
+
+                    should.exist(xIndex);
+                    should.exist(yIndex);
+                    should.exist(zIndex);
+
+                    x.should.eql(1);
+                    y.should.eql(2);
+                    z.should.eql(3);
+
+                    xIndex.should.eql(0);
+                    yIndex.should.eql(1);
+                    zIndex.should.eql(2);
 
                     done();
                 })
@@ -612,13 +688,17 @@ describe('Flow', function () {
 
         it('sychron parEach with variables', function (done) {
 
+            var keys = [];
+
             flow()
                 .parEach({
                     a: 1,
                     b: 2,
                     c: 3
-                }, function(value) {
-                    return value*3;
+                }, function (value) {
+                    keys[value - 1] = this.key;
+
+                    return value * 3;
                 })
                 .exec(function (err, results) {
                     should.not.exist(err);
@@ -631,11 +711,15 @@ describe('Flow', function () {
                     results.should.have.property('c');
                     results.c.should.eql(9);
 
+                    keys.should.eql(["a", "b", "c"]);
+
                     done();
                 })
         });
 
         it('asychron parEach with variables', function (done) {
+
+            var keys = [];
 
             flow()
                 .parEach({
@@ -643,8 +727,11 @@ describe('Flow', function () {
                     b: 2,
                     c: 3
                 }, function (value, cb) {
-                    setTimeout(function(){
-                        cb(null, value*3);
+
+                    keys[value - 1] = this.key;
+
+                    setTimeout(function () {
+                        cb(null, value * 3);
                     }, 10)
 
                 })
@@ -659,10 +746,46 @@ describe('Flow', function () {
                     results.should.have.property('c');
                     results.c.should.eql(9);
 
+                    keys.should.eql(["a", "b", "c"]);
+
                     done();
                 })
         });
 
+        it('asychron parEach with variables and key', function (done) {
+
+            var keys = [];
+
+            flow()
+                .parEach({
+                    a: 1,
+                    b: 2,
+                    c: 3
+                }, function (value, key, cb) {
+
+                    keys[value - 1] = this.key + key;
+
+                    setTimeout(function () {
+                        cb(null, value * 3);
+                    }, 10);
+
+                })
+                .exec(function (err, results) {
+                    should.not.exist(err);
+
+                    should.exist(results);
+                    results.should.have.property('a');
+                    results.a.should.eql(3);
+                    results.should.have.property('b');
+                    results.b.should.eql(6);
+                    results.should.have.property('c');
+                    results.c.should.eql(9);
+
+                    keys.should.eql(["aa", "bb", "cc"]);
+
+                    done();
+                })
+        });
 
         it('exception in synchron parEach tasks should not set a var and call exec', function (done) {
 
@@ -726,11 +849,14 @@ describe('Flow', function () {
 
         it('synchron seqEach', function (done) {
 
-
-            var a, b, c;
+            var a, b, c,
+                keys = [];
 
             flow()
                 .seqEach([1, 2, 3], function (value) {
+
+                    keys[this.key] = value;
+
                     if (value === 1) {
                         should.not.exist(a);
                         should.not.exist(b);
@@ -757,12 +883,34 @@ describe('Flow', function () {
                 })
                 .exec(function (err) {
                     should.not.exist(err);
-                        should.exist(a);
-                        a.should.eql(1);
-                        should.exist(b);
-                        b.should.eql(2);
-                        should.exist(c);
-                        c.should.eql(3);
+                    should.exist(a);
+                    a.should.eql(1);
+                    should.exist(b);
+                    b.should.eql(2);
+                    should.exist(c);
+                    c.should.eql(3);
+
+                    keys.should.eql([1, 2, 3]);
+                    done();
+                })
+        });
+
+        it('asynchron seqEach', function (done) {
+
+            var a, b, c,
+                keys = [];
+
+            flow()
+                .seqEach(["a", "b", "c"], function (value, key, cb) {
+                    setTimeout(function() {
+                        keys[key] = value;
+                        cb();
+                    }, 10);
+                })
+                .exec(function (err) {
+                    should.not.exist(err);
+
+                    keys.should.eql(["a", "b", "c"]);
                     done();
                 })
         });
@@ -776,17 +924,17 @@ describe('Flow', function () {
             var a, b, c;
 
             flow()
-                .seq("a", function(){
+                .seq("a", function () {
                     a = 1;
                     return 1;
                 })
-                .seq("b", function(){
+                .seq("b", function () {
                     b = 2;
                     this.end();
 
                     return 2;
                 })
-                .seq("c", function(){
+                .seq("c", function () {
                     // should not be executed
                     c = 3;
                     return 3;
@@ -804,7 +952,7 @@ describe('Flow', function () {
                     results.b.should.eql(2);
                     a.should.eql(1);
                     b.should.eql(2);
-                    
+
                     done();
                 })
         });
@@ -815,7 +963,7 @@ describe('Flow', function () {
 
             flow()
                 .seq("a", function (cb) {
-                    setTimeout(function(){
+                    setTimeout(function () {
                         a = 1;
                         cb(null, 1);
                     }, 10);
@@ -926,7 +1074,7 @@ describe('Flow', function () {
                     this.end();
                     throw "error"
                 })
-                .seq("b", function() {
+                .seq("b", function () {
                     return 0;
                 })
                 .exec(function (err, results) {
@@ -952,12 +1100,12 @@ describe('Flow', function () {
                     should.not.exist(err);
                     execCount++;
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         execCount.should.eql(1);
                         done();
                     }, 10);
 
-            })
+                })
         });
 
         it('end and callback', function (done) {
@@ -969,7 +1117,7 @@ describe('Flow', function () {
                     this.end();
                     cb();
                 })
-                .seq(function() {
+                .seq(function () {
                     throw "should not cal this block"
                 })
                 .exec(function (err) {
@@ -989,14 +1137,14 @@ describe('Flow', function () {
         it('subflow should in own context', function (done) {
 
             flow()
-                .seq("a", function() {
+                .seq("a", function () {
                     return 1;
                 })
                 .seq("b", function (cb) {
                     flow()
-                        .exec(function(err, results) {
+                        .exec(function (err, results) {
                             should.exist(results) && should.not.exist(err) &&
-                                results.should.not.have.ownProperty('a');
+                            results.should.not.have.ownProperty('a');
 
                             cb(err, 2);
                         });
@@ -1014,36 +1162,36 @@ describe('Flow', function () {
                 })
         });
 
-        it('chaining sub flows', function(done) {
+        it('chaining sub flows', function (done) {
 
             var a, b, c;
 
             flow()
-                .seq(function(cb) {
+                .seq(function (cb) {
 
                     flow()
-                        .seq(function(){
+                        .seq(function () {
                             a = 1;
                         })
                         .par([
-                            function() {
-                                b = 2;
-                            },
-                            function(cb) {
-                                setTimeout(function(){
-                                    c = 3;
-                                    cb();
-                                }, 10);
-                            }
-                        ])
+                        function () {
+                            b = 2;
+                        },
+                        function (cb) {
+                            setTimeout(function () {
+                                c = 3;
+                                cb();
+                            }, 10);
+                        }
+                    ])
                         .exec(cb);
                 })
-                .seq(function(){
+                .seq(function () {
                     should.exist(a);
                     should.exist(b);
                     should.exist(c);
                 })
-                .exec(function(err, results){
+                .exec(function (err, results) {
                     should.not.exist(err);
                     should.exist(results);
                     done();
