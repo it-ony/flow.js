@@ -813,6 +813,41 @@ describe('Flow', function () {
                 })
         });
 
+        it('exception in asynchron parEach tasks should not set a var and call exec', function (done) {
+
+            var methods = {
+                a: function (cb) {
+                    cb();
+                },
+
+                b: function (cb) {
+                    setTimeout(function () {
+                        // some error
+                        cb("error");
+                    }, 1);
+                },
+
+                c: function (cb) {
+                    setTimeout(cb, 1);
+                }
+            };
+
+            flow()
+                .parEach(methods, function (value, cb) {
+                    value(cb);
+                })
+                .exec(function (err, results) {
+                    should.exist(err);
+                    err.should.eql("error");
+
+                    results.should.not.have.property('a');
+                    results.should.not.have.property('b');
+                    results.should.not.have.property('c');
+
+                    done();
+                });
+        });
+
         it('2nd argument for parEach needs to be a function', function (done) {
 
             try {
@@ -902,7 +937,7 @@ describe('Flow', function () {
 
             flow()
                 .seqEach(["a", "b", "c"], function (value, key, cb) {
-                    setTimeout(function() {
+                    setTimeout(function () {
                         keys[key] = value;
                         cb();
                     }, 10);
@@ -1218,4 +1253,5 @@ describe('Flow', function () {
 
     });
 
-});
+})
+;
