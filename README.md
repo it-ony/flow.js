@@ -1,4 +1,6 @@
 [![build status](https://secure.travis-ci.org/it-ony/flow.js.png)](http://travis-ci.org/it-ony/flow.js)
+[![NPM version](https://badge.fury.io/js/flow.js.png)](http://badge.fury.io/js/flow.js)
+
 # flow.js
 ## Introduction
 
